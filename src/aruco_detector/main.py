@@ -23,13 +23,15 @@ def calibrate_camera():
     
     return camera_matrix, dist_coeffs
 
-def main(debug=False, mqtt_url="localhost"):
+def main(debug=False, mqtt_url="localhost", width=640, height=480):
     """
     Main function to run the robot pose estimation system.
     """
+    
     # Initialize camera
     cap = cv2.VideoCapture(0)  # Use 0 for default camera
-    
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
     # Get camera calibration parameters
     camera_matrix, dist_coeffs = calibrate_camera()
     
@@ -106,6 +108,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='ArUco Robot Pose Estimator')
     parser.add_argument('--debug', action='store_true', help='Enable debug mode with visual output')
     parser.add_argument('--mqtt-url', default='localhost', help='MQTT broker URL')
+    parser.add_argument('--width', type=int, default=640, help='Camera frame width')
+    parser.add_argument('--height', type=int, default=480, help='Camera frame height')
     args = parser.parse_args()
     
-    main(debug=args.debug, mqtt_url=args.mqtt_url)
+    main(debug=args.debug, mqtt_url=args.mqtt_url, width=args.width, height=args.height)

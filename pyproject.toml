@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "aruco_detector"
+version = "0.1.0"
+description = "A project utilizing NumPy and OpenCV for computer vision tasks."
+authors = ["Gianluca Aguzzi <gianluca.aguzzi@unibo.it>", "Davide Domini <davide.domini@unibo.it>"]
+readme = "README.md"
+packages = [{include = "aruco_detector", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+numpy = "^1.26.4"
+opencv-python = "^4.10.0.84"
+paho-mqtt = "^2.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

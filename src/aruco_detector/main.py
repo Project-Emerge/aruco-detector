@@ -32,6 +32,15 @@ def main(debug=False, mqtt_url="localhost", width=640, height=480):
     cap = cv2.VideoCapture(0)  # Use 0 for default camera
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+    cap.set(cv2.CAP_PROP_FPS, 144)
+
+    # Check what we actually got
+    actual_width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+    actual_height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+    actual_fps = cap.get(cv2.CAP_PROP_FPS)
+
+    print(f"Camera initialized with resolution: {int(actual_width)}x{int(actual_height)} at {actual_fps} FPS")
+
     # Get camera calibration parameters
     camera_matrix, dist_coeffs = calibrate_camera()
     
@@ -76,9 +85,9 @@ def main(debug=False, mqtt_url="localhost", width=640, height=480):
                 "id": int(pose_info.marker_id)
             }))
             # Draw pose information on frame
-            corners, ids, _ = pose_estimator.detect_markers(frame)
-            poses = pose_estimator.estimate_pose(corners, ids)
             if debug:
+                corners, ids, _ = pose_estimator.detect_markers(frame)
+                poses = pose_estimator.estimate_pose(corners, ids)
                 frame = pose_estimator.draw_pose_info(frame, corners, ids, poses)
             
         # Display frame in debug mode
@@ -110,6 +119,7 @@ if __name__ == "__main__":
     parser.add_argument('--mqtt-url', default='localhost', help='MQTT broker URL')
     parser.add_argument('--width', type=int, default=640, help='Camera frame width')
     parser.add_argument('--height', type=int, default=480, help='Camera frame height')
+    
     args = parser.parse_args()
     
     main(debug=args.debug, mqtt_url=args.mqtt_url, width=args.width, height=args.height)

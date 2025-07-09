@@ -29,7 +29,9 @@ def main(debug=False, mqtt_url="localhost", width=640, height=480):
     """
     
     # Initialize camera
-    cap = cv2.VideoCapture(0)  # Use 0 for default camera
+    cap = cv2.VideoCapture(0, cv2.CAP_V4L2)  # Use 0 for default camera
+    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+    cap.set(cv2.CAP_PROP_FOURCC, fourcc)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
     cap.set(cv2.CAP_PROP_FPS, 144)

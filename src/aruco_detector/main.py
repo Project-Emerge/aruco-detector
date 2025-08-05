@@ -58,7 +58,7 @@ def main(debug=False, mqtt_url="localhost", width=640, height=480):
     print(f"Connected to MQTT broker at {mqtt_url}")
     print("Press 'q' to quit")
     print("Press 's' to save current pose")
-    mqtt_topic = "robot/"
+    mqtt_topic = "robots/"
     client.loop_start()
     # FPS calculation variables
     fps_counter = 0
@@ -77,14 +77,13 @@ def main(debug=False, mqtt_url="localhost", width=640, height=480):
             rot = pose_info.rotation
             print(f"\rMarker {pose_info.marker_id}: "
                 f"Pos({pos['x']:.3f}, {pos['y']:.3f}, {pos['z']:.3f}) "
-                f"Rot({rot['roll']:.1f}, {rot['pitch']:.1f}, {rot['yaw']:.1f})", 
-                end='')
+                f"Rot({rot['roll']:.1f}, {rot['pitch']:.1f}, {rot['yaw']:.1f})")
     
             client.publish(f"{mqtt_topic}{pose_info.marker_id}/position", json.dumps({
                 "x": float(pos['x']),
                 "y": float(pos['y']),
-                "rotation": float(rot['yaw']),
-                "id": int(pose_info.marker_id)
+                "orientation": float(rot['yaw']) * math.pi / 180.0, 
+                "robot_id": int(pose_info.marker_id)
             }))
             # Draw pose information on frame
             if debug:
